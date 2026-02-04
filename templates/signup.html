@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QuizElite | Register</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        
+        /* Header matching your image */
+        .header { background: #1a2a6c; color: white; padding: 20px 8%; text-align: left; font-size: 24px; font-weight: bold; }
+        
+        .container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        
+        .register-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        
+        h2 { color: #1a2a6c; margin-top: 0; text-align: center; margin-bottom: 25px; }
+        
+        /* Styling Django's default form fields */
+        form p { margin-bottom: 15px; color: #555; font-size: 14px; }
+        form input { 
+            width: 100%; padding: 12px; margin-top: 5px; 
+            border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; 
+            font-size: 16px;
+        }
+        
+        /* Form help text hidden to keep it "Normal" and clean */
+        .helptext { display: none; } 
+        ul.errorlist { color: #e74c3c; padding: 0; list-style: none; font-size: 13px; }
+
+        .btn-reg { 
+            background: #27ae60; color: white; border: none; width: 100%; 
+            padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; 
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
+        }
+        .btn-reg:hover { background: #219150; }
+        
+        .footer-link { text-align: center; margin-top: 20px; font-size: 14px; }
+        .footer-link a { color: #1a2a6c; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">QuizElite.ai</div>
+
+    <div class="container">
+        <div class="register-card">
+            <h2>Create Account</h2>
+            <form method="POST">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <p>
+                        <label style="font-weight: bold;">{{ field.label }}</label><br>
+                        {{ field }}
+                        {% if field.errors %}
+                            <span class="errorlist">{{ field.errors }}</span>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+
+                <button type="submit" class="btn-reg">Create My Account</button>
+            </form>
+            
+            <div class="footer-link">
+                Already have an account? <a href="{% url 'login' %}">Login here</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

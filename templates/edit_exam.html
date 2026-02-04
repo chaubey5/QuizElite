@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Exam | QuizElite</title>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; display: flex; justify-content: center; padding-top: 50px; }
+        .form-card { background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 400px; }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; }
+        .btn-save { background: #6366f1; color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <h2>✏️ Edit Exam</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Exam Title</label>
+            <input type="text" name="title" value="{{ exam.title }}" required>
+            
+            <label>Description</label>
+            <textarea name="description" rows="4">{{ exam.description }}</textarea>
+            
+            <label>Total Marks</label>
+            <input type="number" name="marks" value="{{ exam.total_marks }}" required>
+            
+            <button type="submit" class="btn-save">Update Exam Details</button>
+            <a href="{% url 'manage_exams' %}" style="display:block; text-align:center; margin-top:15px; color:#64748b; text-decoration:none;">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

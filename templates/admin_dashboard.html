@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard | QuizElite AI</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #a855f7;
+            --dark: #1e1b4b;
+            --light-bg: #f8fafc;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--light-bg); margin: 0; display: flex; }
+
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--dark); color: white; height: 100vh; padding: 25px; position: fixed; }
+        .sidebar h2 { font-size: 24px; font-weight: 800; color: #818cf8; margin-bottom: 40px; }
+        .sidebar a { display: block; color: #94a3b8; padding: 14px; text-decoration: none; border-radius: 12px; margin-bottom: 5px; transition: 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar a.active { background: var(--primary); }
+
+        /* Content */
+        .main-content { margin-left: 300px; padding: 40px; width: 100%; }
+        
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .stat-card { 
+            background: white; padding: 25px; border-radius: 20px; border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .stat-card h3 { margin: 0; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card .number { font-size: 32px; font-weight: 800; color: var(--dark); margin: 10px 0; }
+        .stat-card .trend { font-size: 13px; font-weight: 600; color: #10b981; }
+
+        /* Layout Grid */
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+
+        /* Activity Table */
+        .card { background: white; border-radius: 20px; border: 1px solid #e2e8f0; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .card h2 { margin-top: 0; font-size: 20px; color: var(--dark); margin-bottom: 20px; }
+        
+        .recent-list { width: 100%; border-collapse: collapse; }
+        .recent-list td { padding: 15px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        .recent-list tr:last-child td { border-bottom: none; }
+        .user-pill { font-weight: 700; color: var(--primary); }
+
+        /* Quick Actions */
+        .action-btn { 
+            display: flex; align-items: center; justify-content: center;
+            background: var(--light-bg); border: 1.5px dashed #cbd5e1;
+            padding: 20px; border-radius: 15px; text-decoration: none;
+            color: #64748b; font-weight: 700; margin-bottom: 15px; transition: 0.3s;
+        }
+        .action-btn:hover { background: #eff6ff; border-color: var(--primary); color: var(--primary); }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>QuizElite AI</h2>
+    <a href="{% url 'admin_dashboard' %}" class="active">📊 Dashboard</a>
+    <a href="{% url 'manage_exams' %}">📝 Manage Exams</a>
+    <a href="{% url 'student_results' %}">🎓 Student Results</a>
+    <div style="position: absolute; bottom: 30px; width: 210px;">
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button style="width:100%; padding:12px; background: #ef4444; color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer;">Logout</button>
+        </form>
+    </div>
+</div>
+
+<div class="main-content">
+    <h1 style="color: var(--dark); margin-bottom: 30px;">Welcome back, Admin! 👋</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Exams</h3>
+            <div class="number">{{ total_exams }}</div>
+            <div class="trend">↑ Live on Portal</div>
+        </div>
+        <div class="stat-card" style="border-left: 5px solid var(--primary);">
+            <h3>Total Students</h3>
+            <div class="number">{{ total_students }}</div>
+            <div class="trend">↑ Registered Users</div>
+        </div>
+        <div class="stat-card">
+            <h3>Submissions</h3>
+            <div class="number">{{ results_count }}</div>
+            <div class="trend">↑ Total Attempts</div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h2>Recent Submissions</h2>
+            <table class="recent-list">
+                {% for res in recent_results %}
+                <tr>
+                    <td><span class="user-pill">{{ res.user.username }}</span> attempted <b>{{ res.exam.title }}</b></td>
+                    <td style="text-align: right; font-weight: 700; color: #10b981;">Score: {{ res.score }}/{{ res.total_questions }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="2" style="color:#94a3b8; text-align:center; padding:20px;">No recent activity found.</td></tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Quick Actions</h2>
+            <a href="{% url 'add_exam' %}" class="action-btn">➕ Create New Exam</a>
+            <a href="{% url 'manage_exams' %}" class="action-btn">✏️ Manage Questions</a>
+            <a href="{% url 'student_results' %}" class="action-btn">🏆 View All Results</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Exam | Admin</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; display: flex; }
+        .sidebar { width: 250px; background: #2c3e50; height: 100vh; position: fixed; color: white; padding: 20px; }
+        .sidebar a { display: block; color: #bdc3c7; padding: 12px; text-decoration: none; margin-bottom: 5px; border-radius: 5px; }
+        .sidebar a:hover { background: #34495e; color: white; }
+        
+        .main-content { margin-left: 270px; padding: 40px; width: 100%; }
+        .form-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 500px; }
+        
+        h2 { color: #1a2a6c; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        
+        input[type="text"], input[type="number"], textarea {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box;
+        }
+        textarea { height: 80px; }
+        
+        .btn-save { background: #27ae60; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-save:hover { background: #219150; }
+        .back-link { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+    <a href="{% url 'manage_exams' %}">Manage Exams</a>
+    <a href="{% url 'student_results' %}">Student Results</a>
+</div>
+
+<div class="main-content">
+    <div class="form-card">
+        <h2>Add New Exam</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Exam Title</label>
+                <input type="text" name="title" placeholder="e.g. Python Basics" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" placeholder="Short summary of the exam..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Total Marks</label>
+                <input type="number" name="marks" value="100" required>
+            </div>
+            <button type="submit" class="btn-save">Create Exam</button>
+            <a href="{% url 'manage_exams' %}" class="back-link">Cancel</a>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

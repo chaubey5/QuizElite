@@ -1,0 +1,13 @@
+<div class="sidebar">
+    <a href="{% url 'admin_dashboard' %}" class="{% if active_tab == 'dashboard' %}active{% endif %}">
+        Dashboard
+    </a>
+
+    <a href="{% url 'manage_exams' %}" class="{% if active_tab == 'manage' %}active{% endif %}">
+        Manage Exams
+    </a>
+
+    <a href="{% url 'student_results' %}" class="{% if active_tab == 'results' %}active{% endif %}">
+        Student Results
+    </a>
+</div>

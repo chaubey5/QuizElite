@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Questions | QuizElite</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 50px; }
+        .form-card { background: white; max-width: 600px; margin: auto; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; }
+        
+        /* Title and Header */
+        h2 { color: #1a2a6c; border-bottom: 2px solid #f1f1f1; padding-bottom: 15px; margin-top: 0; }
+        
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        input:focus { border-color: #1a2a6c; outline: none; background: #f9f9ff; }
+
+        /* Save Button */
+        .btn-add { background: #1a2a6c; color: white; border: none; padding: 14px; width: 100%; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .btn-add:hover { background: #2c3e50; transform: translateY(-2px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+
+        /* Back Button Style */
+        .btn-back { 
+            display: inline-block; 
+            text-decoration: none; 
+            color: #666; 
+            font-weight: 600; 
+            margin-top: 20px; 
+            width: 100%; 
+            text-align: center; 
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .btn-back:hover { color: #1a2a6c; text-decoration: underline; }
+
+        /* Floating Top-Right Back Arrow (Optional) */
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            text-decoration: none;
+            color: #1a2a6c;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-card">
+    <a href="{% url 'manage_exams' %}" class="back-arrow" title="Go Back">✕</a>
+
+    <h2>Add Question to: {{ exam.title }}</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="input-group">
+            <label>Sawaal (Question Text)</label>
+            <input type="text" name="q_text" placeholder="e.g. What is Django?" required>
+        </div>
+        <div class="input-group">
+            <label>Option 1</label>
+            <input type="text" name="opt1" required>
+        </div>
+        <div class="input-group">
+            <label>Option 2</label>
+            <input type="text" name="opt2" required>
+        </div>
+        <div class="input-group">
+            <label>Option 3</label>
+            <input type="text" name="opt3" required>
+        </div>
+        <div class="input-group">
+            <label>Option 4</label>
+            <input type="text" name="opt4" required>
+        </div>
+        <div class="input-group">
+            <label>Correct Answer (Sahi Option)</label>
+            <select name="correct">
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+                <option value="4">Option 4</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn-add">Save Question</button>
+        
+        <a href="{% url 'manage_exams' %}" class="btn-back">← Back to Manage Exams</a>
+    </form>
+</div>
+
+</body>
+</html>

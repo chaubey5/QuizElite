@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Questions | {{ exam.title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); padding: 40px; color: var(--dark); }
+        
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        .btn-back { text-decoration: none; color: var(--primary); font-weight: 700; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 5px; }
+        
+        .header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        
+        /* 📥 New Import Section Styling */
+        .import-card {
+            background: var(--dark);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(30, 41, 59, 0.15);
+        }
+        .import-header { margin-bottom: 15px; }
+        .import-header h2 { margin: 0; font-size: 18px; color: #fff; }
+        .import-header p { margin: 5px 0 0; font-size: 13px; color: #94a3b8; }
+        
+        .import-form { display: flex; gap: 12px; align-items: center; margin-top: 15px; }
+        .file-input { 
+            background: #0f172a; 
+            color: #94a3b8; 
+            padding: 10px; 
+            border-radius: 10px; 
+            border: 1px solid #334155;
+            flex-grow: 1;
+            font-size: 13px;
+        }
+        .btn-upload {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-upload:hover { opacity: 0.9; transform: scale(1.02); }
+
+        .card { 
+            background: white; padding: 25px; border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03); margin-bottom: 20px; 
+            border-left: 6px solid var(--primary); transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.06); }
+        
+        h3 { margin-top: 0; font-size: 18px; line-height: 1.5; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .option { font-size: 14px; color: #64748b; background: #f1f5f9; padding: 10px; border-radius: 10px; }
+        
+        .correct-badge { 
+            display: inline-block; background: #dcfce7; color: var(--success); 
+            padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 800; 
+        }
+
+        .card-actions { border-top: 1px solid #f1f5f9; padding-top: 15px; margin-top: 15px; display: flex; gap: 15px; }
+        .action-link { text-decoration: none; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        .edit-link { color: var(--primary); }
+        .delete-link { color: var(--danger); }
+
+        .btn-add { 
+            background: var(--primary); color: white; padding: 12px 25px; 
+            border-radius: 12px; text-decoration: none; font-weight: 800; 
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="{% url 'manage_exams' %}" class="btn-back">← Back to Exams</a>
+    
+    <div class="header-box">
+        <h1>Questions in: {{ exam.title }}</h1>
+        <a href="{% url 'add_question' exam.id %}" class="btn-add">+ Add Question</a>
+    </div>
+
+    <div class="import-card">
+        <div class="import-header">
+            <h2>📥 Bulk Import via CSV</h2>
+            <p>Columns: question_text, option1, option2, option3, option4, correct_option</p>
+        </div>
+        <form action="{% url 'upload_questions_csv' exam.id %}" method="POST" enctype="multipart/form-data" class="import-form">
+            {% csrf_token %}
+            <input type="file" name="csv_file" accept=".csv" required class="file-input">
+            <button type="submit" class="btn-upload">🚀 Start Upload</button>
+        </form>
+    </div>
+
+    {% for q in questions %}
+    <div class="card">
+        <h3>Q{{ forloop.counter }}. {{ q.question_text }}</h3>
+        
+        <div class="options-grid">
+            <div class="option">1️⃣ {{ q.option1 }}</div>
+            <div class="option">2️⃣ {{ q.option2 }}</div>
+            <div class="option">3️⃣ {{ q.option3 }}</div>
+            <div class="option">4️⃣ {{ q.option4 }}</div>
+        </div>
+
+        <span class="correct-badge">✓ Correct Option: {{ q.correct_option }}</span>
+
+        <div class="card-actions">
+            <a href="{% url 'edit_question' q.id %}" class="action-link edit-link">✏️ Edit Question</a>
+            <a href="#" class="action-link delete-link" onclick="return confirm('Pakka delete karna hai?')">🗑️ Delete</a>
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align: center; padding: 50px; background: white; border-radius: 20px;">
+        <p style="color: #64748b;">Bhai, is exam mein abhi koi sawaal nahi hain. CSV upload karo ya naya sawaal add karo!</p>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
